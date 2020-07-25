@@ -67,13 +67,6 @@ const projectFiles = [
 	'package.json',
 ];
 
-const preprocessFlagNames = {
-	chrome: 'CHROME',
-	development: 'DEBUG',
-	firefox: 'FIREFOX',
-	production: 'RELEASE',
-};
-
 const defaultBrowser = browserChrome;
 
 const isDevServer = !!process.env.WEBPACK_DEV_SERVER;
@@ -228,8 +221,8 @@ function getHtmlEntry(entryName, templateName = null) {
  */
 function getPreprocessFlags(browser) {
 	return {
-		[preprocessFlagNames[browser]]: true,
-		[preprocessFlagNames[getMode()]]: true,
+		[browser]: true,
+		[getMode().toUpperCase()]: true,
 	};
 }
 
