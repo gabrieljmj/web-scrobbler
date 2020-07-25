@@ -84,21 +84,6 @@ const isDevServer = !!process.env.WEBPACK_DEV_SERVER;
  */
 const sharedStyles = ['bootstrap', 'base'];
 
-class WatchExtensionFilesPlugin {
-	apply(compiler) {
-		compiler.hooks.beforeCompile.tap(
-			'WatchExtensionFilesPlugin',
-			(params) => {
-				const extensionFiles = [locales, ...contentFiles];
-
-				for (const path of extensionFiles) {
-					params.compilationDependencies.add(resolve(srcDir, path));
-				}
-			}
-		);
-	}
-}
-
 module.exports = (browserArg) => {
 	const browser = getBrowserFromArgs(browserArg);
 	assertBrowserIsSupported(browser);
@@ -442,7 +427,6 @@ function createPlugins(browser) {
 		new ImageminPlugin({
 			disable: getMode() !== modeProduction,
 		}),
-		new WatchExtensionFilesPlugin(),
 	];
 }
 
