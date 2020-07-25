@@ -88,6 +88,10 @@ module.exports = (browserArg) => {
 	const browser = getBrowserFromArgs(browserArg);
 	assertBrowserIsSupported(browser);
 
+	if (isDevServer) {
+		process.env.NODE_ENV = modeDevelopment;
+	}
+
 	return {
 		devtool: getDevtool(),
 		devServer: {
