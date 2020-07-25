@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const { preprocess } = require('preprocess');
+const { minify } = require('terser');
 
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
@@ -385,9 +386,7 @@ function createPlugins(browser) {
 				from: `${srcDir}/${path}/*.js`,
 				to: resolve(buildDir, path),
 				transform(contents) {
-					return preprocess(contents, getPreprocessFlags(browser), {
-						type: 'js',
-					});
+					return transformContentScript(contents, browser);
 				},
 				flatten: true,
 			};
@@ -429,6 +428,26 @@ function createPlugins(browser) {
 
 function resolve(...p) {
 	return path.resolve(__dirname, ...p);
+}
+
+/**
+ * Preprocess and optimize content script code.
+ *
+ * @param {Object} contents Content script code
+ * @param {String} browser Browser name
+ *
+ * @return {String} Transfrormed content script code
+ */
+function transformContentScript(contents, browser) {
+	const scriptCode = preprocess(contents, getPreprocessFlags(browser), {
+		type: 'js',
+	});
+
+	if (getMode() === modeDevelopment) {
+		return scriptCode;
+	}
+
+	return minify(scriptCode).code;
 }
 
 /**
